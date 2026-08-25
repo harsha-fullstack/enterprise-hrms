@@ -173,7 +173,6 @@ export class EmployeeService {
             withDeleted: true,
         });
 
-        console.log('DEACTIVATE EMPLOYEE:', employee);
 
         if (!employee) {
             throw new NotFoundException(
