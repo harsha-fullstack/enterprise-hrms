@@ -4,7 +4,13 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
+    DeleteDateColumn,
  } from "typeorm";
+
+ export enum EmployeeStatus {
+    ACTIVE = 'ACTIVE',
+    INACTIVE = 'INACTIVE',
+ }
 
  @Entity('employees')
 export class EmployeeEntity {
@@ -20,17 +26,27 @@ export class EmployeeEntity {
     @Column({ unique: true})
     email!: string;
 
-    @Column( )
+    @Column()
     mobile!: string;
 
     @Column({ type: 'date'})
     joiningDate!: Date;
+
+    @Column({
+        type: 'enum',
+        enum: EmployeeStatus,
+        default: EmployeeStatus.ACTIVE,
+    })
+    status!: EmployeeStatus;
 
     @CreateDateColumn()
     createdAt!: Date;
 
     @UpdateDateColumn()
     updatedAt!: Date; 
+
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
 
 }
