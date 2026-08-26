@@ -20,10 +20,16 @@ export class EmployeeController {
     findAll(
         @Query('email') email?: string,
         @Query('mobile') mobile?: string,
+        @Query('status') status?: string,
     ): Promise<EmployeeEntity[]> {
         if (email && mobile) {
             throw new BadRequestException(
                 'Please Provide either email or mobile, not both'
+            );
+        }
+        if(status && (email || mobile)) {
+            throw new BadRequestException(
+                'Status cannot be combined with email or mobile',
             );
         }
         if (email) {
@@ -32,11 +38,15 @@ export class EmployeeController {
         if(mobile) {
             return this.employeeService.findByMobile(mobile);
         }
+        if(status) {
+            return this.employeeService.findByStatus(status);
+        }
         return this.employeeService.findAll();
     }
+
     @Get(':id')
     findOne(
-        @Param('id', ParseIntPipe) 
+        @Param('id', ParseIntPipe)
         id: number,
     ): Promise<EmployeeEntity> {
         return this.employeeService.findOne(id);

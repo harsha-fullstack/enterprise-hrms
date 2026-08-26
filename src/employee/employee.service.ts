@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -69,7 +69,7 @@ export class EmployeeService {
 
     //Update Employee
     async update(
-        id: number,
+         id: number,
         updateEmployeeDto: UpdateEmployeeDto,
     ): Promise<EmployeeEntity> {
         //Reuse existing method
@@ -228,5 +228,25 @@ export class EmployeeService {
         await this.employeeRepository.save(employee);
 
         return employee;
+    }
+
+    async findByStatus(status: string): Promise<EmployeeEntity[]> {
+
+        if (
+            status !== EmployeeStatus.ACTIVE &&
+            status !== EmployeeStatus.INACTIVE
+        ) {
+            throw new BadRequestException(
+                'Invalid employee status',
+            );
+        }
+
+        const employees = await this.employeeRepository.find({
+            where: {
+                status,
+            }
+        });
+
+        return employees;
     }
 }
